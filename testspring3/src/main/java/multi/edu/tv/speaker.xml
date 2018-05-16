@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+	<!-- speaker.annotation 패키지의 자바 annotation 찾아달라 : 의미대로 자바 문장 실행 -->
+	<!-- @Component("tv1") :객체 생성 -->
+	<!-- 공유 -->
+	<!-- <bean id="tv1" class="speaker.annotation.SamsungTV"> <property name="name" 
+		value="이름" /> </bean> -->
+</beans>

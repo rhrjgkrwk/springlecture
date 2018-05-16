@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- p namespace를 사용하기 위해서는 namespace를 로드해야한다. 이클립스의 경우 하단 Namespace탭에서 자동으로 로드할 수 있다. --> 
+
+
+	<!-- DEPENDENCY INJECTION - SETTER INJECTION -->
+	<!-- 다른 메서드는 호출할 방법이 없지만 setter method를 호출할 수 있는 방법이 있다. -->
+	<bean id="sp" class="speaker.SonySpeaker"></bean>
+	<bean id="sp1" class="speaker.MarshalSpeaker"></bean>
+	
+<!-- 	bean tag 사용시 기본적으로 디폴트 생성자를 호출한다. 하지만 생성자 호출을 설정하면 그걸로 호출한돵 -->
+	<bean id="tv1" class="speaker.SamsungTV" p:speaker-ref="sp1" p:name="삼성(P네임스페이스)">
+		<!-- <property name="speaker" ref="sp"></property> name = "speaker" - setSpeaker라는 
+			세터를 호출하자. ref = "sp" 넘겨줄 객체는 sp를 참고하면 됨. <property name="name" value="삼성(SI)"></property> -->
+
+
+		<!-- Constructor Injection -->
+		<!-- <constructor-arg name="name" value="삼성(CI)"></constructor-arg> <constructor-arg 
+			name="speaker" ref="sp"></constructor-arg> -->
+
+		<!-- 이름말고 인덱스로 접근할 수도 있다. -->
+		<!-- <constructor-arg index="0" ref="sp1"></constructor-arg>
+		<constructor-arg index="1" value="삼성(CI)"></constructor-arg> -->
+
+	</bean>
+	
+
+</beans>

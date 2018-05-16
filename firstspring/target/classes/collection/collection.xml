@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	
+	<bean id="a" class="collection.EmpVO" p:id="1" p:name="아무개" p:salary="123.45"></bean>
+	<bean id="b" class="collection.EmpVO" p:id="2" p:name="쿠냥이" p:salary="12123.45"></bean>
+	<bean id="c" class="collection.EmpVO" p:id="3" p:name="냥쿠" p:salary="54123.45"></bean>
+	
+	<bean id="dao" class="collection.EmpCollectionDAO">
+		<property name="empList">
+			<list>
+				<ref bean="a"/>
+				<ref bean="b"/>
+				<ref bean="c"/>
+			</list>
+		</property>
+		<property name="empSet">
+			<set>
+				<ref bean="c"/>
+				<ref bean="a"/>
+				<ref bean="a"/>
+				<ref bean="b"/>
+				<ref bean="b"/>
+				<ref bean="c"/>
+			</set>
+		</property>
+		<property name="empMap">
+			<map>
+				<entry key="emp3" value-ref="c"></entry>
+				<entry key="emp1" value-ref="a"></entry>
+				<entry key="emp2" value-ref="b"></entry>
+			</map>
+		</property>
+	</bean>
+	
+</beans>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+<bean id="target1" class="aop.Member"></bean>
+<bean id="target2" class="aop.Board"></bean>
+<bean id="aspect" class="aop.Common"></bean>
+<!-- aop 설정 -->
+<aop:config>
+<!-- 	대상 설정 -->
+	<aop:pointcut expression="execution (public * aop.*.*(..))" id="pc1"/>
+	<aop:aspect id="aopAspect" ref="aspect">
+<!-- 		before -->
+		<aop:before method="a" pointcut-ref="pc1"/>
+<!-- 		after -->
+		<aop:after method="b" pointcut-ref="pc1"/>
+<!-- 		after+return value -->
+		<aop:after-returning returning="returnValue" method="c" pointcut-ref="pc1"/>
+<!-- 		after+before = around -->
+		<aop:around method="d" pointcut-ref="pc1"/> 
+		
+	</aop:aspect>
+	
+</aop:config>
+</beans>
