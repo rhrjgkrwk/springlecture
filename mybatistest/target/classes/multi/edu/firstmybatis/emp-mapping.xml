@@ -7,7 +7,7 @@
 <mapper namespace="emp">
 
 
-<!-- resultType 설정시 객체의 멤버변수명과 컬럼명이 같은 것을 매핑해서 넣어준다. -->
+	<!-- resultType 설정시 객체의 멤버변수명과 컬럼명이 같은 것을 매핑해서 넣어준다. -->
 	<select id="selectAnEmp" parameterType="String" resultType="emp">
 		SELECT
 		EMPLOYEE_ID,
@@ -16,24 +16,75 @@
 		EMAIL,
 		DEPARTMENT_ID,
 		HIRE_DATE
-		FROM EMPLOYEES
+		FROM
+		EMPLOYEES
 		WHERE UPPER(LAST_NAME) = UPPER(#{A})
-<!-- 		#{value1} -->
+		<!-- #{value1} -->
 	</select>
-	
-	
+
+
 	<select id="selectAllEmp" resultType="emp">
-<!-- 여기서 resultType은 객체의 맵핑만 신경쓰면 된다. Collections는 자바 소스 작성시에 설정한다. -->
-		SELECT 
+		<!-- 여기서 resultType은 객체의 맵핑만 신경쓰면 된다. Collections는 자바 소스 작성시에 설정한다. -->
+		SELECT
 		*
 		FROM EMPLOYEES
 	</select>
+
+	
+<!-- 	<parameterMap type="" id="">
+		<parameter property=""/>
+	
+	</parameterMap> -->
+	
+	<select id="selectByDeptWithArray" parameterType="int[]" resultType="emp">	
+		SELECT * FROM EMPLOYEES 
+		WHERE DEPARTMENT_ID IN <foreach collection="array" item="a" open="(" separator="," close=")">#{a}</foreach>
+<!-- 		collection = 데이터 타입 -->
+<!-- 		item = 하나씩 꺼내와서 쓸 이름. -->
+<!-- 		open = 시작할때 "(" 로시작하고 -->
+<!-- 		separator = ,로 구분하여 -->
+<!-- 		close = 끝날떄 ")"로 닫아준다. -->
+	</select>	
 	
 	
+	
+	<select id="selectByDeptWithList" parameterType="java.util.List" resultType="emp">	
+		SELECT * FROM EMPLOYEES 
+		WHERE DEPARTMENT_ID IN <foreach collection="list" item="d" open="(" separator="," close=")">#{d}</foreach>
+<!-- 		collection = 데이터 타입 -->
+<!-- 		item = 하나씩 꺼내와서 쓸 이름. -->
+<!-- 		open = 시작할때 "(" 로시작하고 -->
+<!-- 		separator = ,로 구분하여 -->
+<!-- 		close = 끝날떄 ")"로 닫아준다. -->
+	</select>	
+	
+	
+	
+	
+	
+
 	<insert id="insertEmp" parameterType="emp">
-		INSERT INTO EMPLOYEES (EMPLOYEE_ID, LAST_NAME, EMAIL, HIRE_DATE, JOB_ID, DEPARTMENT_ID)
-		VALUES(#{employee_id},#{last_name},#{email}, SYSDATE,#{job_id},#{department_id})
+		INSERT INTO EMPLOYEES
+		(EMPLOYEE_ID, LAST_NAME, EMAIL, HIRE_DATE, JOB_ID, DEPARTMENT_ID)
+		VALUES(#{employee_id},#{last_name},#{email},
+		SYSDATE,#{job_id},#{department_id})
 	</insert>
+
+	<insert id="insertEmpSeq" parameterType="emp">
+		<selectKey keyProperty="employee_id" order="BEFORE"
+			resultType="int">
+			select mybatis_emp_seq.nextval from dual
+		</selectKey>
+		insert into
+		employees(EMPLOYEE_ID,LAST_NAME,EMAIL,HIRE_DATE,JOB_ID,DEPARTMENT_ID)
+		values(#{employee_id},#{last_name},#{email},sysdate,#{job_id},#{department_id})
+	</insert>
+
+
+
+
+
+
 	
 	<update id="updateEmp" parameterType="emp">
 		UPDATE EMPLOYEES
@@ -41,25 +92,41 @@
 		DEPARTMENT_ID=#{department_id},
 		EMAIL=#{email}
 		WHERE
-		EMPLOYEE_ID = #{employee_id}
+		EMPLOYEE_ID =
+		#{employee_id}
 	</update>
 	
+<!-- 	update의 경우 Vo를 쓰더라도 안쓰는 멤버변수가 너무 많다. 이를 최소화하기 위해 Map을 사용한다. -->
+<!-- 	Map을 param으로 지정시 태그 내부의 변수명과 map 의 key를 맞춰주어야한다. -->
+	<update id="updateEmpWithMap" parameterType="java.util.Map">
+		UPDATE EMPLOYEES
+		SET
+		DEPARTMENT_ID=#{map_deptid},
+		EMAIL=#{map_email}
+		WHERE
+		EMPLOYEE_ID =
+		#{map_empid}
+	</update>
+	
+
 	<delete id="deleteEmp" parameterType="int">
 		DELETE FROM EMPLOYEES WHERE
 		EMPLOYEE_ID = #{employee_id}
 	</delete>
 	<delete id="deleteEmpHistory" parameterType="int">
-		DELETE FROM JOB_HISTORY WHERE
+		DELETE FROM
+		JOB_HISTORY WHERE
 		EMPLOYEE_ID = #{employee_id}
 	</delete>
-	
-	
 
-<!-- 	<resultMap type="#modelname" id="YourResultSet"> -->
-<!-- 		<id property="param1" column="columnname1" /> -->
-<!-- 		<result property="param2" column="columnname2" /> -->
-<!-- 		<result property="param3" column="columnname3" /> -->
-<!-- 	</resultMap> -->
 
+	<resultMap type="emp2" id="emp2_map">
+		<id property="emp_id" column="employee_id" />
+		<result property="name" column="fullname" />
+		<result property="phone" column="phone_number" />
+	</resultMap>
 
 </mapper>
+
+
+

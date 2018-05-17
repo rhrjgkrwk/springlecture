@@ -71,7 +71,7 @@ public class EmpVO {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return last_name+" "+email+" "+hire_date+" "+job_id;
+		return department_id+"\t"+last_name+"\t"+email+"\t"+hire_date+"\t"+job_id;
 	}
 	
 }	

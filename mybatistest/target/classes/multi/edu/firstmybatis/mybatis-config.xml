@@ -8,6 +8,7 @@
 	
 <!-- 앞으로 EmpVO라는 객체를 emp로 부르겠다. -->
 		<typeAlias type="multi.edu.firstmybatis.EmpVO" alias="emp"></typeAlias>
+		<typeAlias type="multi.edu.firstmybatis.EmpVO2" alias="emp2"></typeAlias>
 	</typeAliases>
 	<environments default="development">
 		<environment id="development">
