@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="multi">
+	<!-- 자바객체 === 테이블 컬럼 -->
+	<!-- parameterType="string" session.selectOne("multi.selectEmpOne", "bell") -->
+	<select id="selectEmpOne" parameterType="string" resultType="emp">
+		SELECT employee_id, last_name, job_id, email, department_id, hire_date
+		FROM employees WHERE UPPER(last_name) = #{a}
+	</select>
+	<!-- 1개 레코드-객체 '<' 사용시 XML태그로 인식하므로 CDATA섹션에 포함. 그대로 DB로 전송하게 됨 -->
+	<select id="selectEmpAll" resultType="emp">select * from employees
+	</select>
+	<insert id="insertEmp" parameterType="emp">
+		insert into employees (EMPLOYEE_ID, LAST_NAME, EMAIL, HIRE_DATE, JOB_ID,
+		DEPARTMENT_ID) values(#{employee_id},#{last_name}, #{email}, sysdate,
+		#{job_id}, #{department_id})
+	</insert>
+	<!-- 1000 사번 부서코드 50:100 변경 email hong@multi.com vo.setEmployee_id(1000) 
+		vo.setEmail("hong@multi.com"): vo.setDepartment_id(100); -->
+	<update id="updateEmp" parameterType="emp">
+		update employees set department_id= #{department_id}, email=#{email} where
+		employee_id =#{employee_id}
+	</update>
+	<!-- service하위,DAO메소드추가 main session.delete("delete태그의id", 1000); -->
+	<delete id="deleteHistory" parameterType="int">delete job_history
+		where employee_id=#{a}</delete>
+	<delete id="deleteEmp" parameterType="int">delete employees where
+		employee_id=#{a}</delete>
+	<select id="getEmpVO2" resultMap="emp2_map">
+	</select>
+	<resultMap type="emp2" id="emp2_map">
+		<result property="emp_id" column="employee_id" />
+		<result property="name" column="fullname" />
+		<result property="phone" column="phone_number" />
+	</resultMap>
+	<insert id="insertEmpWithSeq" parameterType="emp">
+		<selectKey keyProperty="employee_id" order="BEFORE"
+			resultType="int">select mybatis_emp_seq.nextval from dual</selectKey>
+		insert into employees (EMPLOYEE_ID, LAST_NAME, EMAIL, HIRE_DATE,
+		JOB_ID, DEPARTMENT_ID) values(#{employee_id},#{last_name}, #{email},
+		sysdate, #{job_id}, #{department_id})
+	</insert>
+	<select id="selectEmpWithArray" parameterType="int[]"
+		resultType="emp">
+		select * from employees where department_id in
+		<foreach collection="array" item="aa" open="(" separator=","
+			close=")">#{aa}</foreach>
+	</select>
+	<!-- EmpDAO,EmpService들,EmpMain -->
+	<select id="selectEmpWithList" parameterType="java.util.List"
+		resultType="emp">
+		select * from employees where department_id in
+		<foreach collection="list" item="aa" open="(" separator=","
+			close=")">#{aa}</foreach>
+	</select>
+	<!-- Map<String, String> m = new HashMap <String, String>(); m.put("map_deptid", 
+		"50"); //m.put("map_empid", "100"); m.put("map_email", "map@multi.com"); 
+		session.update ("multi.updateEmpWithMap", m); -->
+	<update id="updateEmpWithMap" parameterType="java.util.Map">
+		update employees set department_id= #{map_deptid}, email=#{map_email}
+		where employee_id =
+		<if test="map_empid != null">#{map_empid}</if>
+		<if test="map_empid == null">3</if>
+	</update>
+	<!-- main: 입사일 최근 순서 정렬해서 1 ~ 10 번째까지 해당하는 사원 정보 조회 SQL 정의 – resultType="emp" 
+		매핑 parameterType="???" -->
+	<select id="selectEmpRownum" parameterType="int[]" resultType="emp">
+		select employee_id, last_name, hire_date, email, department_id, job_id
+		from (select rownum r, imsi_t.* from (select * from employees order by
+		hire_date desc) imsi_t) where r between
+		<foreach collection="array" item="r" separator="and">#{r}</foreach>
+	</select>
+	<!-- first_name like '%java%' last_name like '%oracle%' Map<String, String> 
+		m = new HashMap<String, String>(); m.put("column","first_name"); m.put("word","%java%"); -->
+	<select id="selectEmpWithMap" parameterType="java.util.Map"
+		resultType="emp">
+		select * from employees where
+		<if test="column == 'last_name' ">last_name like #{word}</if>
+		<if test="column == 'first_name' ">first_name like #{word}</if>
+	</select>
+	<!-- INT = session.selectOne ("multi.selectEmpCnt") -->
+	<select id="selectEmpCnt" resultType="int">select count(*) from
+		employees</select>
+		
+		
+		
+		
+	<select id="searchEmp" parameterType="java.util.Map" resultType="emp" >
+<!-- 	이렇게 하면 작동되지 않는다. -->
+		select * from employees where #{searchcolumn} = #{searchword}
+	</select>
+		
+		
+		
+		
+		
+		
+		
+		
+</mapper>
